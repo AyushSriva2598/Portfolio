@@ -47,6 +47,29 @@
     <div id="cursorDot" class="cursor-dot" aria-hidden="true"></div>
     <div id="cursorRing" class="cursor-ring" aria-hidden="true"></div>
 
+    <!-- ═══════════════ SATELLITE MINIMAP (FIXED) ═══════════════ -->
+    <div id="satelliteMinimap" class="satellite-minimap" aria-hidden="true">
+        <div class="minimap-header mono-text">ORBITAL TRACKING</div>
+        <svg class="minimap-svg" viewBox="0 0 16 100" preserveAspectRatio="none">
+            <!-- The miniature circuit line -->
+            <path class="minimap-track" d="M 5,3 C 5,10 11,16 11,24 C 11,32 3,38 3,48 C 3,58 11,62 11,72 C 11,82 5,88 5,97" fill="none"/>
+            
+            <!-- Target dots for each section -->
+            <circle class="minimap-dot" cx="5" cy="3" r="0.6"/>
+            <circle class="minimap-dot" cx="11" cy="24" r="0.6"/>
+            <circle class="minimap-dot" cx="3" cy="48" r="0.6"/>
+            <circle class="minimap-dot" cx="11" cy="72" r="0.6"/>
+            <circle class="minimap-dot" cx="5" cy="97" r="0.6"/>
+            
+            <!-- The active marker showing scroll position -->
+            <circle class="minimap-car" id="minimapCar" cx="5" cy="3" r="0.9"/>
+        </svg>
+        <div class="minimap-telemetry mono-text">
+            ALT: 1,200 KM<br>
+            SAT: SEC-L-16
+        </div>
+    </div>
+
     <!-- ═══════════════ FIXED UI: SECTION LABEL ═══════════════ -->
     <div id="sectionLabel" class="section-label" aria-hidden="true">
         <span class="section-label-num">01</span>
@@ -73,34 +96,31 @@
         <path id="trailPath" class="trail-path"
               d="M 5,3 C 5,10 11,16 11,24 C 11,32 3,38 3,48 C 3,58 11,62 11,72 C 11,82 5,88 5,97"
               fill="none"/>
-        <!-- Car marker (invisible — position tracked, actual car is Three.js canvas) -->
+        <!-- Car marker -->
         <g id="carGroup"></g>
     </svg>
-
-    <!-- ═══════════════ THREE.JS CAR CANVAS (FIXED) ═══════════════ -->
-    <canvas id="carCanvas" aria-hidden="true"></canvas>
 
     <!-- ═══════════════ CORNER MARKERS (FIXED) ═══════════════ -->
     <div id="cornerMarkers" class="corner-markers" aria-hidden="true">
         <!-- Turn 1: ABOUT -->
         <div class="corner-marker" id="marker-t1" style="top: 24%; left: 14%;">
             <div class="corner-number">01</div>
-            <div class="corner-label">ABOUT</div>
+            <div class="corner-label">APEX 1</div>
         </div>
         <!-- Turn 2: PROJECTS -->
         <div class="corner-marker" id="marker-t2" style="top: 48%; left: 6%;">
             <div class="corner-number">02</div>
-            <div class="corner-label">WORK</div>
+            <div class="corner-label">STRAIGHT</div>
         </div>
         <!-- Turn 3: SKILLS -->
         <div class="corner-marker" id="marker-t3" style="top: 72%; left: 14%;">
             <div class="corner-number">03</div>
-            <div class="corner-label">SKILLS</div>
+            <div class="corner-label">CHICANE</div>
         </div>
         <!-- Turn 4: CONTACT -->
         <div class="corner-marker" id="marker-t4" style="top: 90%; left: 7%;">
             <div class="corner-number">04</div>
-            <div class="corner-label">CONTACT</div>
+            <div class="corner-label">FINISH</div>
         </div>
     </div>
 
@@ -112,68 +132,43 @@
 
         <!-- ── SECTION 01: HERO ── -->
         <section id="hero" class="section section-hero" data-section-label="IGNITION" data-section-num="01">
-            <div class="race-control-panel hero-panel">
-                <div class="panel-header">
-                    <span class="panel-header-title">RACE CONTROL MESSAGE</span>
-                    <span class="panel-header-time">19:45:36</span>
+            <div class="track-hero-container hero-panel">
+                <div class="coordinate-marker mono-text">SYS_REF: 43.7347° N, 7.4206° E (MONACO)</div>
+                <h1 class="track-painted-title" data-text="AYUSH SRIVASTAVA">AYUSH SRIVASTAVA</h1>
+                <div class="coordinate-marker mono-text role-title">TYPE // SOFTWARE_ENGINEER</div>
+                <div class="hero-scroll-cue">
+                    <span class="scroll-cue-text">SCROLL LAP FOR DATA DISPATCH</span>
+                    <div class="scroll-cue-line"></div>
                 </div>
-                <div class="panel-body">
-                    <div class="panel-sub-header">SYSTEM: ACTIVE MONITORING</div>
-                    <div class="panel-title-condensed">AYUSH KUMAR</div>
-                    <div class="panel-meta-info">
-                        POSITION: FULL STACK DEVELOPER<br>
-                        GRID: AVAILABLE FOR HIRE
-                    </div>
-                    <div class="panel-divider"></div>
-                    <div class="panel-footer-logo">
-                        <svg class="fia-crest" viewBox="0 0 100 100">
-                            <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M30,35 L70,35 M50,35 L50,75 M35,75 L65,75" fill="none" stroke="currentColor" stroke-width="3"/>
-                        </svg>
-                        <span class="logo-text">FIA REGISTERED DEVELOPER</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-scroll-cue">
-                <div class="scroll-cue-line"></div>
-                <span class="scroll-cue-text">SCROLL TO MONITOR</span>
             </div>
         </section>
 
         <!-- ── SECTION 02: ABOUT ── -->
         <section id="about" class="section section-about" data-section-label="DRIVER" data-section-num="02">
-            <div class="race-control-panel about-panel slide-left">
-                <div class="panel-header">
-                    <span class="panel-header-title">DRIVER REGISTRATION</span>
-                    <span class="panel-header-time">STATUS: VERIFIED</span>
+            <div class="track-about-panel about-panel">
+                <div class="satellite-avatar-wrap">
+                    <svg class="satellite-avatar-svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(245,245,240,0.2)" stroke-width="1.5"/>
+                        <circle cx="50" cy="50" r="40" fill="rgba(12,12,14,0.7)"/>
+                        <path d="M 32,55 C 32,38 40,28 50,28 C 60,28 68,38 68,55 C 68,72 60,78 50,78 C 40,78 32,72 32,55 Z" fill="#F5F5F0" opacity="0.85"/>
+                        <path d="M 38,44 C 44,38 56,38 62,44 C 65,48 65,51 62,51 C 56,48 44,48 38,51 C 35,51 35,48 38,44 Z" fill="#E8002D"/>
+                        <line x1="50" y1="2" x2="50" y2="15" stroke="#F0A500" stroke-width="1.5"/>
+                        <line x1="50" y1="85" x2="50" y2="98" stroke="#F0A500" stroke-width="1.5"/>
+                        <line x1="2" y1="50" x2="15" y2="50" stroke="#F0A500" stroke-width="1.5"/>
+                        <line x1="85" y1="50" x2="98" y2="50" stroke="#F0A500" stroke-width="1.5"/>
+                    </svg>
+                    <div class="satellite-lock-label mono-text">DRIVER_LOCK // SEC_1</div>
                 </div>
-                <div class="panel-body mono-text">
-                    <table class="driver-doc-table">
-                        <tr>
-                            <td class="lbl">DOCUMENT</td>
-                            <td>FIA-DRV-2026/02</td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">NAME</td>
-                            <td>AYUSH KUMAR</td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">LOCATION</td>
-                            <td>INDIA / REMOTE</td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">GITHUB</td>
-                            <td><a href="https://github.com" target="_blank" data-cursor-hover>github.com/ayush</a></td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">EXP</td>
-                            <td>5+ YEARS ACTIVE</td>
-                        </tr>
-                    </table>
-                    <div class="panel-divider"></div>
-                    <div class="driver-statement">
-                        <div class="statement-title">COMPLIANCE REPORT:</div>
-                        <p>Driver Ayush Kumar demonstrates exceptional speed in loading performance, clean structure, and pixel precision. Focused on web animations, performance optimization, and premium UI execution.</p>
+                <div class="pit-board-content">
+                    <div class="pit-board-meta mono-text">SECTOR 1 APEX // DRIVER PROFILE</div>
+                    <div class="pit-board-role">AYUSH SRIVASTAVA // IT UNDERGRAD</div>
+                    <p class="pit-board-bio">
+                        Engineering backend systems, cloud architectures, and smart contracts for speed and efficiency. Pursuing B.Tech in Information Technology at KIET Group of Institutions with certifications in AWS Cloud, AI, and CloudOps.
+                    </p>
+                    <div class="pit-board-specs mono-text">
+                        <span>LOC: GHAZIABAD // IN</span>
+                        <span>GPA: 8.24 // 10</span>
+                        <span>ISC: 93.6%</span>
                     </div>
                 </div>
             </div>
@@ -181,58 +176,34 @@
 
         <!-- ── SECTION 03: PROJECTS ── -->
         <section id="projects" class="section section-projects" data-section-label="GRANDS PRIX" data-section-num="03">
-            <div class="race-control-panel projects-panel slide-right">
-                <div class="panel-header">
-                    <span class="panel-header-title">RACE INCIDENT REPORTS</span>
-                    <span class="panel-header-time">SESSION: COMPLETED</span>
-                </div>
-                <div class="panel-body mono-text scrollable-reports">
-                    <!-- Report 1 -->
-                    <div class="incident-report">
-                        <div class="incident-meta">
-                            <span class="incident-id">INCIDENT 01</span>
-                            <span class="incident-verdict status-green">VERDICT: COMPLETED</span>
-                        </div>
-                        <div class="incident-title">VELOCITY ENGINE</div>
-                        <div class="incident-investigation">
-                            INVESTIGATION: Real-time telemetry data visualization for professional motorsports, featuring WebGL plotting and sub-16ms updates.
-                        </div>
-                        <div class="incident-evidence">
-                            EVIDENCE: <a href="https://github.com" target="_blank" class="evidence-link" data-cursor-hover>GITHUB-SOURCE //</a>
+            <div class="track-projects-container projects-panel">
+                <div class="starting-grid-header mono-text">SECTOR 2 STRAIGHT // GRID INCIDENT ARCHIVE</div>
+                <div class="starting-grid">
+                    <div class="grid-box">
+                        <div class="grid-box-num font-heading">01</div>
+                        <div class="grid-box-content">
+                            <h3 class="grid-box-title">STUDENT ETL PIPELINE</h3>
+                            <p class="grid-box-desc">Automated CSV processing pipeline executing data cleaning and transformation for ingestion to a structured database.</p>
+                            <div class="grid-box-tech mono-text">FASTAPI / AWS (S3, EC2, GLUE, ATHENA) / POSTGRESQL</div>
+                            <a href="https://github.com/AyushSriva2598" target="_blank" class="grid-box-link mono-text" data-cursor-hover>SOURCE_CODE //</a>
                         </div>
                     </div>
-                    
-                    <div class="panel-divider-small"></div>
-                    
-                    <!-- Report 2 -->
-                    <div class="incident-report">
-                        <div class="incident-meta">
-                            <span class="incident-id">INCIDENT 02</span>
-                            <span class="incident-verdict status-green">VERDICT: COMPLETED</span>
-                        </div>
-                        <div class="incident-title">APEX STUDIO</div>
-                        <div class="incident-investigation">
-                            INVESTIGATION: High-performance creative agency platform featuring fluid WebGL transitions and responsive 3D asset previews.
-                        </div>
-                        <div class="incident-evidence">
-                            EVIDENCE: <a href="https://github.com" target="_blank" class="evidence-link" data-cursor-hover>GITHUB-SOURCE //</a>
+                    <div class="grid-box">
+                        <div class="grid-box-num font-heading">02</div>
+                        <div class="grid-box-content">
+                            <h3 class="grid-box-title">TRUST CHAIN</h3>
+                            <p class="grid-box-desc">Cryptographically secured donation platform utilizing Ethereum smart contracts and digital signatures to audit fund flow authenticity.</p>
+                            <div class="grid-box-tech mono-text">SOLIDITY / ETHEREUM / ETHERS.JS / SHA-256 / IPFS</div>
+                            <a href="https://github.com/AyushSriva2598" target="_blank" class="grid-box-link mono-text" data-cursor-hover>SOURCE_CODE //</a>
                         </div>
                     </div>
-
-                    <div class="panel-divider-small"></div>
-
-                    <!-- Report 3 -->
-                    <div class="incident-report">
-                        <div class="incident-meta">
-                            <span class="incident-id">INCIDENT 03</span>
-                            <span class="incident-verdict status-yellow">VERDICT: ONGOING</span>
-                        </div>
-                        <div class="incident-title">GRID PROTOCOL</div>
-                        <div class="incident-investigation">
-                            INVESTIGATION: Decentralized dashboard with real-time state updates, cinematic loading screen, and customizable layout configs.
-                        </div>
-                        <div class="incident-evidence">
-                            EVIDENCE: <a href="https://github.com" target="_blank" class="evidence-link" data-cursor-hover>GITHUB-SOURCE //</a>
+                    <div class="grid-box">
+                        <div class="grid-box-num font-heading">03</div>
+                        <div class="grid-box-content">
+                            <h3 class="grid-box-title">ALGORITHMIC ENGINE</h3>
+                            <p class="grid-box-desc">Solved 100+ complex data structure and algorithm challenges on Leetcode, refining runtime complexity and space constraints.</p>
+                            <div class="grid-box-tech mono-text">JAVA / PYTHON / DSA / LOGIC</div>
+                            <a href="https://leetcode.com/ayush__srivastava" target="_blank" class="grid-box-link mono-text" data-cursor-hover>LEETCODE_PROFILE //</a>
                         </div>
                     </div>
                 </div>
@@ -241,83 +212,61 @@
 
         <!-- ── SECTION 04: SKILLS ── -->
         <section id="skills" class="section section-skills" data-section-label="COMPLIANCE" data-section-num="04">
-            <div class="race-control-panel skills-panel slide-up">
-                <div class="panel-header">
-                    <span class="panel-header-title">TECHNICAL REGULATIONS COMPLIANCE SHEET</span>
-                    <span class="panel-header-time">REF: FIA-REG-PART-4</span>
-                </div>
-                <div class="panel-body mono-text">
-                    <table class="compliance-table">
-                        <thead>
-                            <tr>
-                                <th>ARTICLE</th>
-                                <th>TECHNICAL REGULATION</th>
-                                <th>STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Art. 1.0 (Frontend)</td>
-                                <td>HTML5, CSS3, ES6+ JavaScript, WebGL, Three.js, Canvas</td>
-                                <td class="status-green">COMPLIANT</td>
-                            </tr>
-                            <tr>
-                                <td>Art. 2.0 (Frameworks)</td>
-                                <td>React, Next.js, Vue, GSAP, TailwindCSS, Webpack/Vite</td>
-                                <td class="status-green">COMPLIANT</td>
-                            </tr>
-                            <tr>
-                                <td>Art. 3.0 (Backend)</td>
-                                <td>Node.js, Express, Python (FastAPI/Django), Java (Spring Boot)</td>
-                                <td class="status-yellow">PROVISIONAL</td>
-                            </tr>
-                            <tr>
-                                <td>Art. 4.0 (DevOps/Data)</td>
-                                <td>Docker, AWS, Git, CI/CD pipelines, SQL/NoSQL databases</td>
-                                <td class="status-green">COMPLIANT</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="track-skills-panel skills-panel">
+                <div class="skills-header mono-text">SECTOR 3 CHICANE // APEX KERB ALIGNMENT</div>
+                <div class="skills-grid">
+                    <div class="skill-row">
+                        <div class="skill-label mono-text">LANGUAGES // JAVA, PYTHON, JS, SOLIDITY</div>
+                        <div class="kerb-strip">
+                            <div class="kerb-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-label mono-text">FRAMEWORKS // DJANGO, FASTAPI</div>
+                        <div class="kerb-strip">
+                            <div class="kerb-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-label mono-text">CLOUD / TOOLS // AWS (S3, EC2, IAM), GIT</div>
+                        <div class="kerb-strip">
+                            <div class="kerb-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-label mono-text">DATABASES // POSTGRESQL (SQL), MONGODB</div>
+                        <div class="kerb-strip">
+                            <div class="kerb-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- ── SECTION 05: CONTACT ── -->
         <section id="contact" class="section section-contact" data-section-label="PIT RADIO" data-section-num="05">
-            <div class="race-control-panel contact-panel fade-center">
-                <div class="panel-header">
-                    <span class="panel-header-title">MESSAGE TO RACE CONTROL</span>
-                    <span class="panel-header-time">REF: COM-DIRECT</span>
+            <div class="track-contact-panel contact-panel">
+                <div class="contact-header mono-text">LAP COMPLETE // TRANSMIT TELEMETRY DISPATCH</div>
+                <div class="chequered-finish-line"></div>
+                
+                <div class="contact-stencil-grid">
+                    <a href="mailto:ayushsriva2598@gmail.com" class="stencil-contact-link font-heading" data-cursor-hover>
+                        EMAIL // AYUSHSRIVA2598@GMAIL.COM
+                    </a>
+                    <a href="https://linkedin.com/in/ayush-srivastava" target="_blank" class="stencil-contact-link font-heading" data-cursor-hover>
+                        LINKEDIN // AYUSH-SRIVASTAVA
+                    </a>
+                    <a href="https://github.com/AyushSriva2598" target="_blank" class="stencil-contact-link font-heading" data-cursor-hover>
+                        GITHUB // AYUSHSRIVA2598
+                    </a>
                 </div>
-                <div class="panel-body mono-text">
-                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Telemetry transmitted to Race Control.');">
-                        <div class="form-group">
-                            <label>TO: RACE CONTROL DIRECTION</label>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group half-width">
-                                <label for="senderName">FROM (NAME):</label>
-                                <input type="text" id="senderName" required placeholder="e.g. S. VETTEL">
-                            </div>
-                            <div class="form-group half-width">
-                                <label for="senderEmail">EMAIL CHANNEL:</label>
-                                <input type="email" id="senderEmail" required placeholder="e.g. seb@astonmartin.com">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="messageText">COMMUNICATION TEXT:</label>
-                            <textarea id="messageText" rows="4" required placeholder="Type your dispatch here..."></textarea>
-                        </div>
-                        <div class="form-footer">
-                            <button type="submit" class="transmit-btn" data-cursor-hover>
-                                <span class="btn-icon">⚡</span> TRANSMIT TELEMETRY
-                            </button>
-                        </div>
-                    </form>
+                
+                <div class="lap-complete-glow mono-text">
+                    <span class="pulse-dot"></span> ORBITAL LINK STABLE // DISPATCH ENROUTE
                 </div>
             </div>
             <footer class="footer">
-                <span class="footer-text">OFFICIAL RACE CONTROL INTERFACE — ENGINEERED AT SPEED</span>
+                <span class="footer-text">SATELLITE IMAGE SOURCE: SEC-L-16 MONACO SUNSET QUALIFYING SESSION</span>
             </footer>
         </section>
 

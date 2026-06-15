@@ -507,6 +507,16 @@
             onUpdate: (self) => {
                 const progress = self.progress;
 
+                // Update minimap car position
+                const minimapTrack = document.querySelector('.minimap-track');
+                const minimapCar = document.getElementById('minimapCar');
+                if (minimapTrack && minimapCar) {
+                    const miniLength = minimapTrack.getTotalLength();
+                    const miniPt = minimapTrack.getPointAtLength(miniLength * progress);
+                    minimapCar.setAttribute('cx', miniPt.x);
+                    minimapCar.setAttribute('cy', miniPt.y);
+                }
+
                 // Trail reveal
                 trailPath.style.strokeDashoffset = totalLength * (1 - progress);
 
@@ -667,71 +677,107 @@
     // SCROLL ANIMATIONS (SECTIONS)
     // ────────────────────────────────────────────
     function initScrollAnimations() {
-        // ── Panel Scroll Animations ──
+        // ── HUD and Video Overlay Toggle ──
+        const hudElements = '#satelliteMinimap, #speedometer, #carPathSvg, #cornerMarkers, #carCanvas';
+        
+        ScrollTrigger.create({
+            trigger: '#hero',
+            start: 'bottom 85%',
+            end: 'bottom 15%',
+            onLeave: () => {
+                gsap.to(hudElements, { opacity: 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('.video-bg', { opacity: 0.68, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('.video-bg-overlay', { opacity: 0.25, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('#sectionLabel', { opacity: 0.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+            },
+            onEnterBack: () => {
+                gsap.to(hudElements, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('.video-bg', { opacity: 0.42, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('.video-bg-overlay', { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to('#sectionLabel', { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+            }
+        });
 
-        // Hero Panel (Drops from Top: starts at top: -100%)
+        // ── Panel Scroll Animations (Centered Transitions) ──
+
+        // Hero Panel (Drops from Top)
         gsap.fromTo('.hero-panel', 
-            { x: '-50%', y: '-50%', top: '-100%' },
+            { xPercent: -50, yPercent: -250 },
             {
-                top: '50%',
-                x: '-50%',
-                y: '-50%',
+                xPercent: -50,
+                yPercent: -50,
                 scrollTrigger: {
                     trigger: '#hero',
                     start: 'top 50%',
                     end: 'bottom 50%',
                     toggleActions: 'play reverse play reverse',
+                    onEnter: () => document.querySelector('.hero-panel')?.classList.add('active'),
+                    onLeave: () => document.querySelector('.hero-panel')?.classList.remove('active'),
+                    onEnterBack: () => document.querySelector('.hero-panel')?.classList.add('active'),
+                    onLeaveBack: () => document.querySelector('.hero-panel')?.classList.remove('active'),
                 },
                 duration: 0.8,
                 ease: 'power3.out'
             }
         );
 
-        // About Panel (Slides in from Left: starts at translateX(-120%))
+        // About Panel (Slides in from Left)
         gsap.fromTo('.about-panel', 
-            { x: '-120%', y: '-50%' },
+            { xPercent: -250, yPercent: -50 },
             {
-                x: '0%',
-                y: '-50%',
+                xPercent: -50,
+                yPercent: -50,
                 scrollTrigger: {
                     trigger: '#about',
                     start: 'top 50%',
                     end: 'bottom 50%',
                     toggleActions: 'play reverse play reverse',
+                    onEnter: () => document.querySelector('.about-panel')?.classList.add('active'),
+                    onLeave: () => document.querySelector('.about-panel')?.classList.remove('active'),
+                    onEnterBack: () => document.querySelector('.about-panel')?.classList.add('active'),
+                    onLeaveBack: () => document.querySelector('.about-panel')?.classList.remove('active'),
                 },
                 duration: 0.8,
                 ease: 'power3.out'
             }
         );
 
-        // Projects Panel (Slides in from Right: starts at translateX(120%))
+        // Projects Panel (Slides in from Right)
         gsap.fromTo('.projects-panel', 
-            { x: '120%', y: '-50%' },
+            { xPercent: 150, yPercent: -50 },
             {
-                x: '0%',
-                y: '-50%',
+                xPercent: -50,
+                yPercent: -50,
                 scrollTrigger: {
                     trigger: '#projects',
                     start: 'top 50%',
                     end: 'bottom 50%',
                     toggleActions: 'play reverse play reverse',
+                    onEnter: () => document.querySelector('.projects-panel')?.classList.add('active'),
+                    onLeave: () => document.querySelector('.projects-panel')?.classList.remove('active'),
+                    onEnterBack: () => document.querySelector('.projects-panel')?.classList.add('active'),
+                    onLeaveBack: () => document.querySelector('.projects-panel')?.classList.remove('active'),
                 },
                 duration: 0.8,
                 ease: 'power3.out'
             }
         );
 
-        // Skills Panel (Slides up from Bottom: starts at translateY(120%))
+        // Skills Panel (Slides up from Bottom)
         gsap.fromTo('.skills-panel', 
-            { x: '-50%', y: '120%' },
+            { xPercent: -50, yPercent: 150 },
             {
-                x: '-50%',
-                y: '0%',
+                xPercent: -50,
+                yPercent: -50,
                 scrollTrigger: {
                     trigger: '#skills',
                     start: 'top 50%',
                     end: 'bottom 50%',
                     toggleActions: 'play reverse play reverse',
+                    onEnter: () => document.querySelector('.skills-panel')?.classList.add('active'),
+                    onLeave: () => document.querySelector('.skills-panel')?.classList.remove('active'),
+                    onEnterBack: () => document.querySelector('.skills-panel')?.classList.add('active'),
+                    onLeaveBack: () => document.querySelector('.skills-panel')?.classList.remove('active'),
                 },
                 duration: 0.8,
                 ease: 'power3.out'
@@ -740,18 +786,20 @@
 
         // Contact Panel (Fades & Scales in)
         gsap.fromTo('.contact-panel', 
-            { x: '-50%', y: '-50%', scale: 0.9, opacity: 0 },
+            { xPercent: -50, yPercent: -50, scale: 0.9, opacity: 0 },
             {
                 scale: 1,
                 opacity: 1,
-                x: '-50%',
-                y: '-50%',
+                xPercent: -50,
+                yPercent: -50,
                 scrollTrigger: {
                     trigger: '#contact',
                     start: 'top 50%',
                     end: 'bottom 50%',
                     toggleActions: 'play reverse play reverse',
                     onEnter: () => document.querySelector('.contact-panel')?.classList.add('active'),
+                    onLeave: () => document.querySelector('.contact-panel')?.classList.remove('active'),
+                    onEnterBack: () => document.querySelector('.contact-panel')?.classList.add('active'),
                     onLeaveBack: () => document.querySelector('.contact-panel')?.classList.remove('active'),
                 },
                 duration: 0.6,
