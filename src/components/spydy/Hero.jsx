@@ -1,0 +1,345 @@
+import React, { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { HERO_DATA, ASSETS } from "../../data/spidermanData";
+
+export const Hero = () => {
+  const containerRef = useRef(null);
+  const maskImgRef = useRef(null);
+  const taglineRef = useRef(null);
+  const headlineRef = useRef(null);
+  const ctaRef = useRef(null);
+  const websRef = useRef(null);
+
+  const marquee1Ref = useRef(null);
+  const marquee2Ref = useRef(null);
+  const tween1 = useRef(null);
+  const tween2 = useRef(null);
+
+  const mouse = useRef({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 500,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 500,
+    alpha: 1,
+    size: 60,
+  }).current;
+
+  const quickX = useRef(null);
+  const quickY = useRef(null);
+  const isInteracting = useRef(false);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Intro timeline
+      gsap
+        .timeline({ defaults: { ease: "back.out(1.7)" } })
+        .fromTo(
+          websRef.current?.children || [],
+          { opacity: 0, scale: 0.5 },
+          { opacity: 0.5, scale: 1, duration: 2, stagger: 0.4, ease: "power3.out" }
+        )
+        .fromTo(
+          taglineRef.current,
+          { x: -100, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1.2 },
+          "-=1.5"
+        )
+        .fromTo(
+          headlineRef.current,
+          { x: -150, opacity: 0, skewX: -15 },
+          { x: 0, opacity: 1, skewX: 0, duration: 1.2 },
+          "-=1.0"
+        )
+        .fromTo(
+          ctaRef.current?.children || [],
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "back.out(2)" },
+          "-=0.8"
+        );
+
+      // Web ambient rotations
+      if (websRef.current?.children) {
+        gsap.to(websRef.current.children, {
+          rotation: 360,
+          duration: 120,
+          repeat: -1,
+          ease: "linear",
+        });
+        gsap.to(websRef.current.children, {
+          scale: 1.1,
+          duration: 4,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        });
+      }
+
+      // Marquee continuous loops
+      if (marquee1Ref.current && marquee2Ref.current) {
+        tween1.current = gsap.to(marquee1Ref.current, {
+          x: "-50%",
+          repeat: -1,
+          duration: 16,
+          ease: "none",
+        });
+        gsap.set(marquee2Ref.current, { x: "-50%" });
+        tween2.current = gsap.to(marquee2Ref.current, {
+          x: "0%",
+          repeat: -1,
+          duration: 20,
+          ease: "none",
+        });
+      }
+
+      // Kinetic marquee slight text float
+      gsap.to(".marquee-text", {
+        y: -4,
+        yoyo: true,
+        repeat: -1,
+        duration: 0.8,
+        ease: "sine.inOut",
+        stagger: 0.1,
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Spotlight mask continuous animation & tick update
+  useEffect(() => {
+    quickX.current = gsap.quickTo(mouse, "x", { duration: 0.35, ease: "power4.out" });
+    quickY.current = gsap.quickTo(mouse, "y", { duration: 0.35, ease: "power4.out" });
+
+    // Ambient floating spotlight on mobile or idle
+    const ambientTween = gsap.to(mouse, {
+      x: () => (window.innerWidth * 0.45) + Math.sin(Date.now() * 0.001) * 60,
+      y: () => (window.innerHeight * 0.5) + Math.cos(Date.now() * 0.001) * 60,
+      repeat: -1,
+      duration: 3,
+      ease: "sine.inOut",
+      paused: false,
+    });
+
+    const updateMask = () => {
+      if (maskImgRef.current) {
+        const { x, y, alpha, size } = mouse;
+        const mask = `radial-gradient(circle ${size}px at ${x}px ${y}px, rgba(0,0,0,${alpha}) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,1) 100%)`;
+        maskImgRef.current.style.webkitMaskImage = mask;
+        maskImgRef.current.style.maskImage = mask;
+      }
+    };
+
+    gsap.ticker.add(updateMask);
+
+    return () => {
+      gsap.ticker.remove(updateMask);
+      ambientTween.kill();
+    };
+  }, [mouse]);
+
+  const handleMouseMove = (e) => {
+    isInteracting.current = true;
+    quickX.current?.(e.clientX);
+    quickY.current?.(e.clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches[0]) {
+      isInteracting.current = true;
+      const touch = e.touches[0];
+      quickX.current?.(touch.clientX);
+      quickY.current?.(touch.clientY);
+      gsap.to(mouse, {
+        alpha: 0,
+        size: 140,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    gsap.to(mouse, {
+      alpha: 1,
+      size: 60,
+      duration: 0.8,
+      ease: "power4.inOut",
+      overwrite: "auto",
+    });
+  };
+
+  const handleMouseEnter = () => {
+    gsap.to(mouse, {
+      alpha: 0,
+      size: 700,
+      duration: 0.8,
+      ease: "elastic.out(1, 0.7)",
+      overwrite: "auto",
+    });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.to(mouse, {
+      alpha: 1,
+      size: 60,
+      duration: 1.2,
+      ease: "power4.inOut",
+      overwrite: "auto",
+    });
+  };
+
+  const handleMarqueeEnter = () => {
+    if (tween1.current && tween2.current) {
+      gsap.to([tween1.current, tween2.current], {
+        timeScale: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
+      });
+    }
+  };
+
+  const handleMarqueeLeave = () => {
+    if (tween1.current && tween2.current) {
+      gsap.to([tween1.current, tween2.current], {
+        timeScale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+      });
+    }
+  };
+
+  const renderMarqueeContent = (items) => (
+    <>
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="flex items-center h-full shrink-0">
+          {items.map((item, idx) => (
+            <React.Fragment key={`${i}-${idx}`}>
+              <span className="marquee-text mx-3 sm:mx-4 md:mx-6 text-sm md:text-base lg:text-xl font-black uppercase italic tracking-widest whitespace-nowrap shrink-0 drop-shadow-sm">
+                {item}
+              </span>
+              <img
+                src={idx % 2 === 0 ? ASSETS.spiderIcon : ASSETS.webImg}
+                alt="Separator"
+                className="mx-3 sm:mx-4 md:mx-6 h-5 sm:h-6 md:h-8 lg:h-10 w-auto object-contain shrink-0 drop-shadow-md"
+              />
+            </React.Fragment>
+          ))}
+        </div>
+      ))}
+    </>
+  );
+
+  return (
+    <main className="w-full flex flex-col bg-white overflow-hidden">
+      {/* Hero Dual-Layer Spotlight Section */}
+      <section
+        ref={containerRef}
+        className="relative w-full h-screen overflow-hidden flex items-center justify-center cursor-crosshair select-none"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchMove}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Layer 1: Identity Underneath */}
+        <img
+          src={ASSETS.bottomIdentityImg}
+          alt="Identity Layer"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-10"
+        />
+
+        {/* Layer 2: Spider-Man Mask Spotlight */}
+        <img
+          ref={maskImgRef}
+          src={ASSETS.topMaskImg}
+          alt="Spider-Man Mask Layer"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-20"
+          style={{ WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}
+        />
+
+        {/* Corner Web Overlays */}
+        <div
+          ref={websRef}
+          className="absolute inset-0 pointer-events-none z-[25] overflow-hidden"
+        >
+          <img
+            src={ASSETS.webImg}
+            alt="Spider Web Top"
+            className="absolute top-0 left-0 w-44 h-44 sm:w-64 sm:h-64 md:w-[400px] md:h-[400px] object-contain opacity-40 sm:opacity-50 -translate-x-1/4 -translate-y-1/4 mix-blend-multiply"
+          />
+          <img
+            src={ASSETS.webImg}
+            alt="Spider Web Bottom"
+            className="absolute bottom-0 right-0 w-52 h-52 sm:w-72 sm:h-72 md:w-[500px] md:h-[500px] object-contain opacity-40 sm:opacity-50 translate-x-1/4 translate-y-1/4 mix-blend-multiply"
+          />
+        </div>
+
+        {/* Hero Title & Information */}
+        <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-12 lg:left-24 z-30 flex flex-col gap-3 pointer-events-none drop-shadow-md max-w-lg w-full">
+          <span
+            ref={taglineRef}
+            className="text-[#a31515] font-bold uppercase text-xs md:text-sm tracking-[0.2em] opacity-0 flex items-center gap-2"
+          >
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+            {HERO_DATA.tagline}
+          </span>
+
+          <h1
+            ref={headlineRef}
+            className="text-gray-900 text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none opacity-0 italic uppercase"
+            style={{ textShadow: "4px 4px 0px #ef4444, 7px 7px 0px #a31515" }}
+          >
+            {HERO_DATA.firstName}
+            <br />
+            {HERO_DATA.lastName}
+          </h1>
+
+          <div
+            ref={ctaRef}
+            className="flex flex-wrap items-center gap-4 mt-6 pointer-events-auto"
+          >
+            <a
+              href="#projects"
+              className="relative overflow-hidden bg-[#a31515] hover:bg-[#7a0f0f] text-white px-8 py-3.5 rounded-lg font-bold text-xs md:text-sm tracking-wide transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(163,21,21,0.4)] cursor-pointer uppercase border border-[#a31515]"
+            >
+              Explore Projects
+            </a>
+            <a
+              href="#contact"
+              className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black px-6 py-3.5 rounded-lg font-bold transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] uppercase text-xs md:text-sm group"
+            >
+              <img
+                src={ASSETS.spiderIcon}
+                alt="Spider"
+                className="w-4 h-4 object-contain filter invert transition-transform group-hover:scale-110"
+              />
+              Get In Touch
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Kinetic Crossed Marquees */}
+      <section
+        className="relative w-full h-[20vh] md:h-[28vh] bg-white overflow-hidden flex items-center justify-center z-30 py-8"
+        onMouseEnter={handleMarqueeEnter}
+        onMouseLeave={handleMarqueeLeave}
+      >
+        {/* Top Marquee (Red bar, skewed +4deg) */}
+        <div className="absolute w-[115vw] h-12 md:h-16 lg:h-20 bg-[#a31515] text-white border-y-[3px] border-black rotate-[4deg] -translate-y-4 md:-translate-y-6 shadow-[0_10px_20px_rgba(0,0,0,0.4)] z-20 flex items-center overflow-hidden scale-105">
+          <div ref={marquee1Ref} className="flex items-center h-full w-max">
+            {renderMarqueeContent(HERO_DATA.marqueeItems)}
+          </div>
+        </div>
+
+        {/* Bottom Marquee (Dark bar, skewed -4deg) */}
+        <div className="absolute w-[115vw] h-12 md:h-16 lg:h-20 bg-[#111111] text-[#ef4444] border-y-[3px] border-[#a31515] rotate-[-4deg] translate-y-4 md:translate-y-6 shadow-[0_5px_15px_rgba(0,0,0,0.5)] z-10 flex items-center overflow-hidden scale-105">
+          <div ref={marquee2Ref} className="flex items-center h-full w-max">
+            {renderMarqueeContent(HERO_DATA.marqueeItems)}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+export default Hero;
