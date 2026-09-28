@@ -19,6 +19,9 @@ export default {
         },
       },
       fontFamily: {
+        comic: ["Bangers", "Impact", "cursive"],
+        narrative: ["EB Garamond", "Georgia", "serif"],
+        dialogue: ["Comic Neue", "Comic Sans MS", "cursive"],
         sans: ["Outfit", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
