@@ -4,7 +4,6 @@ import { HERO_DATA, ASSETS } from "../../data/spidermanData";
 
 export const Hero = () => {
   const containerRef = useRef(null);
-  const maskImgRef = useRef(null);
   const taglineRef = useRef(null);
   const headlineRef = useRef(null);
   const ctaRef = useRef(null);
@@ -14,17 +13,6 @@ export const Hero = () => {
   const marquee2Ref = useRef(null);
   const tween1 = useRef(null);
   const tween2 = useRef(null);
-
-  const mouse = useRef({
-    x: typeof window !== "undefined" ? window.innerWidth / 2 : 500,
-    y: typeof window !== "undefined" ? window.innerHeight / 2 : 500,
-    alpha: 1,
-    size: 60,
-  }).current;
-
-  const quickX = useRef(null);
-  const quickY = useRef(null);
-  const isInteracting = useRef(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -103,90 +91,6 @@ export const Hero = () => {
     return () => ctx.revert();
   }, []);
 
-  // Spotlight mask continuous animation & tick update
-  useEffect(() => {
-    quickX.current = gsap.quickTo(mouse, "x", { duration: 0.35, ease: "power4.out" });
-    quickY.current = gsap.quickTo(mouse, "y", { duration: 0.35, ease: "power4.out" });
-
-    // Ambient floating spotlight on mobile or idle
-    const ambientTween = gsap.to(mouse, {
-      x: () => (window.innerWidth * 0.45) + Math.sin(Date.now() * 0.001) * 60,
-      y: () => (window.innerHeight * 0.5) + Math.cos(Date.now() * 0.001) * 60,
-      repeat: -1,
-      duration: 3,
-      ease: "sine.inOut",
-      paused: false,
-    });
-
-    const updateMask = () => {
-      if (maskImgRef.current) {
-        const { x, y, alpha, size } = mouse;
-        const mask = `radial-gradient(circle ${size}px at ${x}px ${y}px, rgba(0,0,0,${alpha}) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,1) 100%)`;
-        maskImgRef.current.style.webkitMaskImage = mask;
-        maskImgRef.current.style.maskImage = mask;
-      }
-    };
-
-    gsap.ticker.add(updateMask);
-
-    return () => {
-      gsap.ticker.remove(updateMask);
-      ambientTween.kill();
-    };
-  }, [mouse]);
-
-  const handleMouseMove = (e) => {
-    isInteracting.current = true;
-    quickX.current?.(e.clientX);
-    quickY.current?.(e.clientY);
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches && e.touches[0]) {
-      isInteracting.current = true;
-      const touch = e.touches[0];
-      quickX.current?.(touch.clientX);
-      quickY.current?.(touch.clientY);
-      gsap.to(mouse, {
-        alpha: 0,
-        size: 140,
-        duration: 0.4,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    gsap.to(mouse, {
-      alpha: 1,
-      size: 60,
-      duration: 0.8,
-      ease: "power4.inOut",
-      overwrite: "auto",
-    });
-  };
-
-  const handleMouseEnter = () => {
-    gsap.to(mouse, {
-      alpha: 0,
-      size: 700,
-      duration: 0.8,
-      ease: "elastic.out(1, 0.7)",
-      overwrite: "auto",
-    });
-  };
-
-  const handleMouseLeave = () => {
-    gsap.to(mouse, {
-      alpha: 1,
-      size: 60,
-      duration: 1.2,
-      ease: "power4.inOut",
-      overwrite: "auto",
-    });
-  };
-
   const handleMarqueeEnter = () => {
     if (tween1.current && tween2.current) {
       gsap.to([tween1.current, tween2.current], {
@@ -230,31 +134,16 @@ export const Hero = () => {
 
   return (
     <main className="w-full flex flex-col bg-white overflow-hidden">
-      {/* Hero Dual-Layer Spotlight Section */}
+      {/* Hero Section — Clean Spider-Man Background */}
       <section
         ref={containerRef}
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center cursor-crosshair select-none"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchMove}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        className="relative w-full h-screen overflow-hidden flex items-center justify-center select-none"
       >
-        {/* Layer 1: Identity Underneath */}
+        {/* Single Background Image — Spider-Man Mask (no face reveal) */}
         <img
-          src={ASSETS.bottomIdentityImg}
-          alt="Identity Layer"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-10"
-        />
-
-        {/* Layer 2: Spider-Man Mask Spotlight */}
-        <img
-          ref={maskImgRef}
           src={ASSETS.topMaskImg}
-          alt="Spider-Man Mask Layer"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-20"
-          style={{ WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}
+          alt="Spider-Man Hero"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-10"
         />
 
         {/* Corner Web Overlays */}
