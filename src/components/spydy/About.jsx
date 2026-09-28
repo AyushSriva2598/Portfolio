@@ -164,7 +164,7 @@ export const About = () => {
           <div className="overflow-hidden">
             <span
               ref={badgeRef}
-              className="inline-flex items-center gap-2 text-[#a31515] font-bold uppercase text-xs md:text-sm tracking-[0.2em]"
+              className="inline-flex items-center gap-2 text-[#a31515] font-comic tracking-[0.2em] text-sm uppercase"
             >
               <img
                 src={ASSETS.spiderIcon}
@@ -178,8 +178,7 @@ export const About = () => {
           <div className="overflow-hidden py-2">
             <h2
               ref={titleRef}
-              className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase italic text-gray-900"
-              style={{ textShadow: "2px 2px 0px #fca5a5" }}
+              className="text-comic-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none"
             >
               {ABOUT_DATA.title}
             </h2>
@@ -187,25 +186,26 @@ export const About = () => {
 
           <div
             ref={textRef}
-            className="flex flex-col gap-6 text-gray-700 text-base md:text-lg leading-relaxed max-w-xl font-medium mt-2"
+            className="flex flex-col gap-5 text-gray-900 font-comic-narrative text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mt-2 border-l-4 border-[#a31515] pl-4 sm:pl-5 bg-white/70 backdrop-blur-sm py-4 pr-4 rounded-r-2xl shadow-sm"
             style={{ perspective: "1000px" }}
           >
             {ABOUT_DATA.paragraphs.map((p, idx) => (
               <p key={idx} className="origin-bottom">
-                {p}
+                “{p}”
               </p>
             ))}
           </div>
 
           <div className="mt-6">
-            <h3 className="text-xs uppercase tracking-widest text-gray-500 mb-6 font-bold border-b border-gray-300 pb-2 inline-block">
-              Primary Tech Stack
+            <h3 className="font-comic text-sm uppercase tracking-widest text-[#a31515] mb-4 font-bold border-b border-[#a31515]/30 pb-2 inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#a31515]" />
+              Primary Tech Arsenal
             </h3>
             <div ref={pillsRef} className="flex flex-wrap gap-3">
               {ABOUT_DATA.techStack.map((tech, idx) => (
                 <div
                   key={idx}
-                  className="tech-pill px-5 py-2.5 border border-[#a31515]/30 bg-white text-[#a31515] rounded-xl text-sm font-bold tracking-wider hover:bg-[#a31515] hover:text-white hover:border-[#a31515] shadow-sm hover:shadow-[0_8px_20px_rgba(163,21,21,0.3)] transition-all duration-300 cursor-default select-none"
+                  className="tech-pill px-4 sm:px-5 py-2 sm:py-2.5 border border-[#a31515]/30 bg-white text-[#a31515] rounded-xl font-comic text-sm sm:text-base tracking-wider hover:bg-[#a31515] hover:text-white hover:border-[#a31515] shadow-sm hover:shadow-[0_8px_20px_rgba(163,21,21,0.3)] transition-all duration-300 cursor-default select-none"
                 >
                   {tech}
                 </div>
