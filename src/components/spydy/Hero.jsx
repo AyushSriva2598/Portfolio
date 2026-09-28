@@ -213,7 +213,7 @@ export const Hero = () => {
         <div key={i} className="flex items-center h-full shrink-0">
           {items.map((item, idx) => (
             <React.Fragment key={`${i}-${idx}`}>
-              <span className="marquee-text mx-3 sm:mx-4 md:mx-6 text-sm md:text-base lg:text-xl font-black uppercase italic tracking-widest whitespace-nowrap shrink-0 drop-shadow-sm">
+              <span className="marquee-text mx-3 sm:mx-4 md:mx-6 font-comic text-base sm:text-lg md:text-xl lg:text-2xl uppercase italic tracking-widest whitespace-nowrap shrink-0 drop-shadow-sm">
                 {item}
               </span>
               <img
@@ -275,38 +275,48 @@ export const Hero = () => {
         </div>
 
         {/* Hero Title & Information */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-12 lg:left-24 z-30 flex flex-col gap-3 pointer-events-none drop-shadow-md max-w-lg w-full">
-          <span
+        <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-12 lg:left-24 z-30 flex flex-col gap-4 pointer-events-none drop-shadow-md max-w-xl w-full">
+          <div
             ref={taglineRef}
-            className="text-[#a31515] font-bold uppercase text-xs md:text-sm tracking-[0.2em] opacity-0 flex items-center gap-2"
+            className="flex items-center gap-2 opacity-0"
           >
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-            {HERO_DATA.tagline}
-          </span>
+            <span className="w-6 sm:w-8 h-[2px] bg-red-600" />
+            <span className="text-[#a31515] font-comic tracking-[0.2em] text-xs sm:text-sm uppercase font-bold">
+              {HERO_DATA.tagline}
+            </span>
+          </div>
 
           <h1
             ref={headlineRef}
-            className="text-gray-900 text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none opacity-0 italic uppercase"
-            style={{ textShadow: "4px 4px 0px #ef4444, 7px 7px 0px #a31515" }}
+            className="text-comic-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] tracking-tight opacity-0 select-none"
           >
-            {HERO_DATA.firstName}
+            {HERO_DATA.quoteHeadingLine1}
             <br />
-            {HERO_DATA.lastName}
+            {HERO_DATA.quoteHeadingLine2}
           </h1>
+
+          <p className="font-comic-narrative text-gray-900 text-sm sm:text-base md:text-lg leading-relaxed max-w-lg select-text bg-white/40 backdrop-blur-[2px] rounded-lg p-1">
+            {HERO_DATA.narrativeContext}
+          </p>
+
+          <div className="flex items-center gap-2 text-xs font-mono tracking-wider text-gray-700 font-semibold">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.8)]" />
+            <span>{HERO_DATA.firstName} {HERO_DATA.lastName} • {HERO_DATA.role}</span>
+          </div>
 
           <div
             ref={ctaRef}
-            className="flex flex-wrap items-center gap-4 mt-6 pointer-events-auto"
+            className="flex flex-wrap items-center gap-4 mt-2 pointer-events-auto"
           >
             <a
               href="#projects"
-              className="relative overflow-hidden bg-[#a31515] hover:bg-[#7a0f0f] text-white px-8 py-3.5 rounded-lg font-bold text-xs md:text-sm tracking-wide transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(163,21,21,0.4)] cursor-pointer uppercase border border-[#a31515]"
+              className="relative overflow-hidden bg-[#a31515] hover:bg-[#7a0f0f] text-white px-8 py-3.5 rounded-lg font-comic tracking-wider text-base transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(163,21,21,0.4)] cursor-pointer uppercase border border-[#a31515]"
             >
-              Explore Projects
+              Explore Missions
             </a>
             <a
               href="#contact"
-              className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black px-6 py-3.5 rounded-lg font-bold transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] uppercase text-xs md:text-sm group"
+              className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black px-6 py-3.5 rounded-lg font-comic tracking-wider text-base transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] uppercase group"
             >
               <img
                 src={ASSETS.spiderIcon}
@@ -342,4 +352,3 @@ export const Hero = () => {
     </main>
   );
 };
-export default Hero;

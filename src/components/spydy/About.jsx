@@ -234,4 +234,3 @@ export const About = () => {
     </section>
   );
 };
-export default About;

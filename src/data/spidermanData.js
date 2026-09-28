@@ -1,8 +1,13 @@
 export const HERO_DATA = {
+  quoteHeadingLine1: "WITH GREAT POWER",
+  quoteHeadingLine2: "COMES GREAT CODE",
+  narrativeContext:
+    "From distributed microservices to AI-powered platforms — I build systems that stay up when it matters most. Cloud-native. Resilient. Built to scale like the web itself.",
   firstName: "AYUSH",
   lastName: "SRIVASTAVA.",
+  role: "Full Stack Developer & Systems Engineer",
   navTitle: "AYUSH.",
-  tagline: "Your Friendly Neighborhood Engineer",
+  tagline: "FRIENDLY NEIGHBORHOOD ENGINEER",
   marqueeItems: [
     "Full Stack Developer",
     "Python & Microservices",

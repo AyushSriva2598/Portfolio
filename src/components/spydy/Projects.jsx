@@ -128,6 +128,14 @@ export const Projects = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-[#a31515] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
 
             <div>
+              {proj.isPinned && (
+                <div className="mb-2">
+                  <span className="inline-flex items-center gap-1.5 text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 bg-red-50 text-[#a31515] border border-[#a31515]/30 rounded-md group-hover:bg-[#a31515] group-hover:text-white transition-colors duration-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#a31515] group-hover:bg-white animate-pulse" />
+                    PINNED // GITHUB
+                  </span>
+                </div>
+              )}
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-black uppercase tracking-tight text-gray-900 group-hover:text-[#a31515] transition-colors duration-300">
                   {proj.title}
@@ -167,4 +175,3 @@ export const Projects = () => {
     </section>
   );
 };
-export default Projects;

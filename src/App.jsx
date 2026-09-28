@@ -1,16 +1,9 @@
 import React from "react";
-import {
-  Navbar,
-  Hero,
-  About,
-  Skills,
-  Projects,
-  Contact,
-} from "./components/spydy";
+import { Navbar, Hero, About, Skills, Projects, Contact } from "./components/spydy";
 
-export default function App() {
+export function App() {
   return (
-    <div className="w-full min-h-screen bg-white text-gray-900 overflow-x-hidden font-['Outfit',sans-serif]">
+    <div className="w-full min-h-screen bg-white text-gray-900 overflow-x-hidden font-sans selection:bg-[#a31515] selection:text-white">
       <Navbar />
       <Hero />
       <About />
@@ -20,3 +13,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;
